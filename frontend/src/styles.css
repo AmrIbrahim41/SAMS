@@ -263,7 +263,20 @@ body:has(.admin-bar) .hero{padding-top:96px}
   display:flex;align-items:flex-start;justify-content:center;padding:40px 16px;overflow-y:auto}
 .modal{width:100%;max-width:440px;margin:auto}
 .modal h3{margin-bottom:16px;font-size:18px}
-@media(max-width:520px){.pcard.lead,.lead-group .add-slot{width:100%}}
+@media(max-width:520px){
+  .cd-lead,.lead-group{gap:14px;width:100%}
+  .pcard.lead,.lead-group .add-slot{width:100%;max-width:360px;margin-inline:auto}
+}
+/* member/organizer cards: smaller & denser on phones */
+@media(max-width:560px){
+  .pgrid{grid-template-columns:repeat(2,1fr);gap:10px}
+  .pcard.mini{padding:14px 10px}
+  .pcard.mini .pf-photo{width:58px;height:58px;margin-bottom:8px}
+  .pcard.mini .pf-ph{font-size:24px}
+  .pcard.mini .pf-name{font-size:13.5px;margin-bottom:2px}
+  .pcard.mini .pf-major{font-size:11.5px;margin-bottom:2px}
+  .pcard.mini .pf-actions{margin-top:8px;padding-top:8px;gap:8px}
+}
 
 /* ===== Social / footer ===== */
 section.connect{padding:60px 0 90px;text-align:center}
