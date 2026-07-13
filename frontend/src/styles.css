@@ -197,13 +197,15 @@ section.committee-detail::before{content:"";position:absolute;inset:0;pointer-ev
   padding:22px 18px;text-align:center;backdrop-filter:blur(10px);opacity:0;transform:translateY(24px);
   transition:transform .35s,box-shadow .35s,border-color .35s,opacity .5s}
 .pcard.in{opacity:1;transform:translateY(0)}
-.pcard.lead{width:230px}
+.pcard.lead{width:250px}
 .pcard:hover{transform:translateY(-6px);box-shadow:0 20px 40px rgba(0,0,0,.4)}
-.pf-photo{width:96px;height:96px;border-radius:50%;object-fit:cover;margin:0 auto 14px;display:block;
+.pf-photo{width:96px;height:96px;border-radius:50%;object-fit:cover;object-position:top center;margin:0 auto 14px;display:block;
   border:2px solid color-mix(in srgb,var(--c,#4aa3ff) 55%,transparent)}
+.pcard.lead .pf-photo{width:100%;height:220px;border-radius:16px;margin-bottom:16px}
 .pcard.mini .pf-photo{width:78px;height:78px;margin-bottom:12px}
 .pf-ph{display:grid;place-items:center;font-size:38px;font-weight:800;
   background:color-mix(in srgb,var(--c,#4aa3ff) 16%,rgba(255,255,255,.05))}
+.pcard.lead .pf-ph{font-size:66px}
 .pcard.mini .pf-ph{font-size:30px}
 .pf-role{font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}
 .pf-name{font-size:16px;font-weight:700;color:#eaf2fb;margin-bottom:4px}
