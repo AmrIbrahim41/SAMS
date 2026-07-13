@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { api } from "../lib/api.js";
 import { COMMITTEES, LEAD_ROLES } from "../lib/committees.jsx";
+import FocusPicker from "./FocusPicker.jsx";
 
 // أول حرف من الاسم كبديل للصورة
 function initials(name) {
@@ -9,7 +10,8 @@ function initials(name) {
 
 function Avatar({ member, color }) {
   if (member.photo) {
-    return <img className="pf-photo" src={member.photo} alt={member.name} loading="lazy" />;
+    return <img className="pf-photo" src={member.photo} alt={member.name} loading="lazy"
+      style={{ objectPosition: member.focus || "50% 30%" }} />;
   }
   return <div className="pf-photo pf-ph" style={{ color }}>{initials(member.name)}</div>;
 }
@@ -177,6 +179,7 @@ function MemberEditor({ ctx, onClose, onSaved }) {
     name: m?.name || "", branch: m?.branch || "", major: m?.major || "", bio: m?.bio || "",
   });
   const [photo, setPhoto] = useState(null);
+  const [focus, setFocus] = useState(m?.focus || "50% 30%");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const set = (k, v) => setF((s) => ({ ...s, [k]: v }));
@@ -191,6 +194,7 @@ function MemberEditor({ ctx, onClose, onSaved }) {
     fd.append("major", f.major);
     if (isLead) { fd.append("branch", f.branch); fd.append("bio", f.bio); }
     fd.append("is_published", "true");
+    fd.append("focus", focus);
     if (photo) fd.append("photo", photo);
     setBusy(true);
     try {
@@ -219,6 +223,7 @@ function MemberEditor({ ctx, onClose, onSaved }) {
         )}
         <div className="field"><label>الصورة {m?.photo ? "(اتركها فارغة للإبقاء على الحالية)" : ""}</label>
           <input type="file" accept="image/*" onChange={(e) => setPhoto(e.target.files[0])} /></div>
+        <FocusPicker file={photo} existingUrl={m?.photo} value={focus} onChange={setFocus} />
         <div className="row">
           <button className="btn" disabled={busy}>{busy ? "جارٍ الحفظ…" : "حفظ"}</button>
           <button type="button" className="btn ghost" onClick={onClose}>إلغاء</button>

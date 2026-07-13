@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { api } from "../lib/api.js";
+import FocusPicker from "./FocusPicker.jsx";
 
 function initials(name) {
   return (name || "؟").trim().charAt(0);
@@ -9,7 +10,8 @@ function SupCard({ s, admin, onEdit, onDelete }) {
   return (
     <article className="scard">
       {s.photo
-        ? <img className="sc-photo" src={s.photo} alt={s.name} loading="lazy" />
+        ? <img className="sc-photo" src={s.photo} alt={s.name} loading="lazy"
+            style={{ objectPosition: s.focus || "50% 30%" }} />
         : <div className="sc-photo sc-ph">{initials(s.name)}</div>}
       <div className="sc-body">
         {s.title && <div className="sc-title">{s.title}</div>}
@@ -80,6 +82,7 @@ function SupervisorEditor({ sup, onClose, onSaved }) {
     name: sup?.name || "", title: sup?.title || "", bio: sup?.bio || "", link: sup?.link || "",
   });
   const [photo, setPhoto] = useState(null);
+  const [focus, setFocus] = useState(sup?.focus || "50% 30%");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const set = (k, v) => setF((s) => ({ ...s, [k]: v }));
@@ -93,6 +96,7 @@ function SupervisorEditor({ sup, onClose, onSaved }) {
     fd.append("bio", f.bio);
     fd.append("link", f.link);
     fd.append("is_published", "true");
+    fd.append("focus", focus);
     if (photo) fd.append("photo", photo);
     setBusy(true);
     try {
@@ -117,6 +121,7 @@ function SupervisorEditor({ sup, onClose, onSaved }) {
           <input value={f.link} onChange={(e) => set("link", e.target.value)} placeholder="https://linkedin.com/in/..." /></div>
         <div className="field"><label>الصورة {sup?.photo ? "(اتركها فارغة للإبقاء على الحالية)" : ""}</label>
           <input type="file" accept="image/*" onChange={(e) => setPhoto(e.target.files[0])} /></div>
+        <FocusPicker file={photo} existingUrl={sup?.photo} value={focus} onChange={setFocus} />
         <div className="row">
           <button className="btn" disabled={busy}>{busy ? "جارٍ الحفظ…" : "حفظ"}</button>
           <button type="button" className="btn ghost" onClick={onClose}>إلغاء</button>
