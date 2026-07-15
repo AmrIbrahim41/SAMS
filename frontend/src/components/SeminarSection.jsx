@@ -143,8 +143,8 @@ export default function SeminarSection({ admin = false }) {
     <section className="seminar" id="seminar">
       <div className="wrap">
         <div className="sec-head">
-          <h2>الندوة <span className="hl">التعريفية</span></h2>
-          <p className="sec-sub">لقطات وفيديوهات من ندوة التعريف بمحاكاة السادات.</p>
+          <h2>نبذة عن <span className="hl">تفاصيل رحلتنا</span></h2>
+          <p className="sec-sub">لقطات وفيديوهات من رحلتنا في محاكاة السادات.</p>
         </div>
 
         <div className="mgrid">
