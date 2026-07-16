@@ -2,12 +2,16 @@ import { useEffect, useMemo, useState } from "react";
 import { api } from "../lib/api.js";
 import { COMMITTEES } from "../lib/committees.jsx";
 
-const BRANCHES = [["boys", "بنين"], ["girls", "بنات"]];
+const BRANCHES = [
+  ["cairo", "القاهرة"], ["alex", "الإسكندرية"], ["portsaid", "بورسعيد"],
+  ["minya", "المنيا"], ["assiut", "أسيوط"], ["gharbia", "الغربية (طنطا)"],
+  ["dakahlia", "الدقهلية"],
+];
 const YEARS = [
   ["1", "الفرقة الأولى"], ["2", "الفرقة الثانية"],
   ["3", "الفرقة الثالثة"], ["4", "الفرقة الرابعة"],
 ];
-const EMPTY = { name: "", committee: COMMITTEES[0].key, branch: "boys", year: "1", points: 0 };
+const EMPTY = { name: "", committee: COMMITTEES[0].key, branch: "cairo", year: "1", points: 0 };
 
 const cmt = (key) => COMMITTEES.find((c) => c.key === key) || {};
 const label = (pairs, v) => (pairs.find((p) => p[0] === v) || [, ""])[1];
@@ -111,7 +115,9 @@ export default function PointsDashboard({ onClose }) {
             <div className="field"><label>الاسم</label>
               <input value={form.name} onChange={(e) => set("name", e.target.value)} required /></div>
             <div className="field"><label>اللجنة</label>
-              <select value={form.committee} onChange={(e) => set("committee", e.target.value)}>
+              <select className="pd-committee" value={form.committee}
+                onChange={(e) => set("committee", e.target.value)}
+                style={{ "--cc": cmt(form.committee).color }}>
                 {COMMITTEES.map((c) => <option key={c.key} value={c.key}>{c.name}</option>)}
               </select></div>
             <div className="field"><label>الفرع</label>
@@ -142,6 +148,7 @@ export default function PointsDashboard({ onClose }) {
           <span className="pd-count">{shown.length} شخص</span>
         </div>
 
+        <div className="pd-table-wrap">
         <table className="table pd-table">
           <thead><tr>
             <th>#</th><th>الاسم</th><th>اللجنة</th><th>الفرقة</th><th>الفرع</th>
@@ -170,6 +177,7 @@ export default function PointsDashboard({ onClose }) {
             )}
           </tbody>
         </table>
+        </div>
       </div>
     </div>
   );

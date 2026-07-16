@@ -351,24 +351,60 @@ footer.foot .foot-links a:hover{color:#eaf2fb}
   background:color-mix(in srgb,var(--c) 12%,var(--glass))}
 
 /* ===== Points dashboard (admin) ===== */
-.pd-ov{position:fixed;inset:0;z-index:80;background:rgba(4,8,14,.75);backdrop-filter:blur(6px);
-  display:flex;justify-content:center;padding:28px 16px;overflow-y:auto}
-.pd-panel{width:100%;max-width:1000px;background:#0d1826;border:1px solid var(--glass-line);
-  border-radius:18px;padding:22px;height:max-content;box-shadow:0 30px 80px rgba(0,0,0,.5)}
-.pd-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
-.pd-head h2{font-size:22px;font-weight:800;color:#eaf2fb}
-.pd-form{margin:0 0 18px;max-width:100%}
-.pd-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:12px}
-.pd-controls{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
-.pd-search{flex:1;min-width:180px;background:rgba(255,255,255,.06);border:1px solid var(--glass-line);
-  border-radius:10px;padding:10px 12px;color:#eaf2fb;font-family:inherit;font-size:14px}
-.pd-count{font-size:13px;color:#9fb6ce}
-.pd-table{font-size:13.5px}
-.pd-table td,.pd-table th{white-space:nowrap}
-.pd-table tr.dim{opacity:.5}
+.pd-ov{position:fixed;inset:0;z-index:80;background:rgba(4,8,14,.78);backdrop-filter:blur(8px);
+  display:flex;justify-content:center;padding:clamp(12px,3vw,32px);overflow-y:auto;
+  animation:pdFade .25s ease}
+@keyframes pdFade{from{opacity:0}to{opacity:1}}
+.pd-panel{width:100%;max-width:1040px;height:max-content;
+  background:linear-gradient(180deg,#101f31,#0b1521);border:1px solid rgba(255,255,255,.08);
+  border-radius:20px;padding:clamp(16px,3vw,26px);box-shadow:0 40px 90px rgba(0,0,0,.55);
+  animation:pdRise .3s cubic-bezier(.2,.8,.2,1)}
+@keyframes pdRise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.pd-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  margin-bottom:18px;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,.07)}
+.pd-head h2{font-size:clamp(18px,2.4vw,23px);font-weight:800;color:#eaf2fb}
+.pd-form{margin:0 0 18px;max-width:100%;border-radius:16px}
+.pd-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:14px}
+
+/* unified inputs/selects — soft & smooth */
+.pd-panel .field input,.pd-panel .field select,.pd-search,.pd-controls select{
+  width:100%;height:44px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);
+  border-radius:12px;padding:0 13px;color:#eaf2fb;font-family:inherit;font-size:14px;
+  transition:border-color .2s,box-shadow .2s,background .2s}
+.pd-panel .field input:focus,.pd-panel .field select:focus,.pd-search:focus,.pd-controls select:focus{
+  outline:none;border-color:var(--blue,#4aa3ff);background:rgba(255,255,255,.08);
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--blue,#4aa3ff) 22%,transparent)}
+.pd-panel select option,.pd-controls select option{background:#0d1826;color:#eaf2fb}
+
+/* committee select tinted by chosen committee */
+.pd-committee{border-color:color-mix(in srgb,var(--cc,#4aa3ff) 55%,transparent)!important;
+  color:var(--cc,#4aa3ff)!important;font-weight:700;
+  background:color-mix(in srgb,var(--cc,#4aa3ff) 12%,rgba(255,255,255,.04))!important}
+.pd-committee:focus{box-shadow:0 0 0 3px color-mix(in srgb,var(--cc,#4aa3ff) 28%,transparent)!important}
+
+.pd-controls{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:4px 0 12px}
+.pd-search{flex:1;min-width:180px}
+.pd-controls select{width:auto;min-width:150px}
+.pd-count{font-size:13px;color:#9fb6ce;margin-inline-start:auto}
+
+/* table */
+.pd-table-wrap{overflow-x:auto;border:1px solid rgba(255,255,255,.07);border-radius:14px}
+.pd-table{font-size:13.5px;margin:0;min-width:640px}
+.pd-table th{background:rgba(255,255,255,.03);color:#bcd0e6;font-weight:700;position:sticky;top:0}
+.pd-table td,.pd-table th{white-space:nowrap;padding:11px 12px}
+.pd-table tbody tr{transition:background .18s}
+.pd-table tbody tr:hover{background:rgba(255,255,255,.035)}
+.pd-table tr.dim{opacity:.45}
 .pd-table .top5{color:#ffd15c}
-.cdot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-inline-end:7px;vertical-align:middle}
-.field select,.pd-controls select{background:rgba(255,255,255,.06);border:1px solid var(--glass-line);
-  border-radius:10px;padding:10px 12px;color:#eaf2fb;font-family:inherit;font-size:14px}
-.field select option,.pd-controls select option{background:#0d1826;color:#eaf2fb}
-.btn.sm{padding:7px 14px;font-size:13px}
+.cdot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-inline-end:7px;vertical-align:middle;
+  box-shadow:0 0 8px currentColor}
+.btn.sm{padding:8px 15px;font-size:13px;border-radius:11px}
+
+@media(max-width:600px){
+  .pd-grid{grid-template-columns:1fr 1fr}
+  .pd-controls{gap:8px}
+  .pd-search{flex:1 1 100%}
+  .pd-controls select{flex:1}
+  .pd-count{flex:1 1 100%;margin:0;text-align:center}
+}
+@media(max-width:380px){.pd-grid{grid-template-columns:1fr}}

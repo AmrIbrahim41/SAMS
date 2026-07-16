@@ -123,8 +123,13 @@ class Participant(models.Model):
     """صف في لوحة النقاط — شخص له نقاط داخل لجنة. أعلى 5 في كل لجنة يظهروا على الموقع."""
 
     BRANCH_CHOICES = [
-        ("boys", "بنين"),
-        ("girls", "بنات"),
+        ("cairo", "القاهرة"),
+        ("alex", "الإسكندرية"),
+        ("portsaid", "بورسعيد"),
+        ("minya", "المنيا"),
+        ("assiut", "أسيوط"),
+        ("gharbia", "الغربية (طنطا)"),
+        ("dakahlia", "الدقهلية"),
     ]
     YEAR_CHOICES = [
         ("1", "الفرقة الأولى"),
@@ -135,7 +140,7 @@ class Participant(models.Model):
 
     name = models.CharField(max_length=120)
     committee = models.CharField(max_length=40, choices=CommitteeMember.COMMITTEE_CHOICES)
-    branch = models.CharField(max_length=10, choices=BRANCH_CHOICES, blank=True)
+    branch = models.CharField(max_length=20, choices=BRANCH_CHOICES, blank=True)
     year = models.CharField(max_length=2, choices=YEAR_CHOICES, blank=True)
     points = models.IntegerField(default=0)
     is_published = models.BooleanField(default=True)
