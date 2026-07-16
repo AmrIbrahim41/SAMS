@@ -64,7 +64,7 @@ function rankBadge(i) {
 }
 
 // لوحة صدارة اللجنة — أعلى 5 نقاط (بيانات من /participants/top/)
-function Leaderboard({ rows, color }) {
+function Leaderboard({ rows, color, committee }) {
   if (!rows || rows.length === 0) return null;
   return (
     <div className="cd-block">
@@ -75,6 +75,7 @@ function Leaderboard({ rows, color }) {
             <span className="lb-rank">{rankBadge(i)}</span>
             <span className="lb-name">{p.name}</span>
             <span className="lb-meta">
+              <span className="lb-cmt" style={{ color }}>{committee}</span>
               {[p.year_display, p.branch_display].filter(Boolean).join(" • ")}
             </span>
             <span className="lb-pts">{p.points}<em>نقطة</em></span>
@@ -152,9 +153,6 @@ export default function CommitteeSections({ admin = false }) {
                 })}
               </div>
 
-              {/* لوحة الصدارة — أعلى 5 نقاط (تُدار من داشبورد النقاط) */}
-              <Leaderboard rows={top[c.key]} color={c.color} />
-
               {/* المنظمون */}
               {(organizers.length > 0 || admin) && (
                 <div className="cd-block">
@@ -172,6 +170,9 @@ export default function CommitteeSections({ admin = false }) {
                   </div>
                 </div>
               )}
+
+              {/* لوحة الصدارة — أعلى 5 نقاط (تُدار من داشبورد النقاط) */}
+              <Leaderboard rows={top[c.key]} color={c.color} committee={c.name} />
             </div>
           </section>
         );

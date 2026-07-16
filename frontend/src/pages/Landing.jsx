@@ -6,6 +6,7 @@ import CommitteeSections from "../components/CommitteeSections.jsx";
 import SupervisorsSection from "../components/SupervisorsSection.jsx";
 import SeminarSection from "../components/SeminarSection.jsx";
 import PointsDashboard from "../components/PointsDashboard.jsx";
+import PublicLeaderboard from "../components/PublicLeaderboard.jsx";
 
 const QUOTES = [
   { t: 'النجاح ليس نهاية المطاف، والفشل ليس قاتلاً؛ ما يهمّ حقًا هو <span class="hl">الشجاعة على الاستمرار</span>.', a: "ونستون تشرشل" },
@@ -19,6 +20,7 @@ export default function Landing({ admin = false, onLogout }) {
   const [qi, setQi] = useState(0);
   const [fade, setFade] = useState(false);
   const [showPoints, setShowPoints] = useState(false);
+  const [showBoard, setShowBoard] = useState(false);
   const timer = useRef(null);
 
   function doLogout() { logout(); if (onLogout) onLogout(); }
@@ -164,8 +166,15 @@ export default function Landing({ admin = false, onLogout }) {
               </article>
             ))}
           </div>
+          <div className="cgrid-cta">
+            <button className="board-btn" onClick={() => setShowBoard(true)}>
+              🏆 لوحة الصدارة العامة
+            </button>
+          </div>
         </div>
       </section>
+
+      {showBoard && <PublicLeaderboard onClose={() => setShowBoard(false)} />}
 
       {/* ===== COMMITTEE DETAILS (teams) ===== */}
       <CommitteeSections admin={admin} />
