@@ -199,7 +199,6 @@ export default function Landing({ admin = false, onLogout }) {
       <footer className="foot">
         © 2026 محاكاة البنوك — أكاديمية السادات للعلوم الإدارية
         <div className="en">SAMS Banking Simulation · Sadat Academy for Management Sciences</div>
-        <div className="foot-links"><Link to="/videos">الفيديوهات</Link></div>
       </footer>
     </>
   );
