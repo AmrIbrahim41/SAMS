@@ -117,3 +117,33 @@ class CommitteeMember(models.Model):
 
     def __str__(self):
         return f"{self.get_committee_display()} — {self.name} ({self.get_role_display()})"
+
+
+class Participant(models.Model):
+    """صف في لوحة النقاط — شخص له نقاط داخل لجنة. أعلى 5 في كل لجنة يظهروا على الموقع."""
+
+    BRANCH_CHOICES = [
+        ("boys", "بنين"),
+        ("girls", "بنات"),
+    ]
+    YEAR_CHOICES = [
+        ("1", "الفرقة الأولى"),
+        ("2", "الفرقة الثانية"),
+        ("3", "الفرقة الثالثة"),
+        ("4", "الفرقة الرابعة"),
+    ]
+
+    name = models.CharField(max_length=120)
+    committee = models.CharField(max_length=40, choices=CommitteeMember.COMMITTEE_CHOICES)
+    branch = models.CharField(max_length=10, choices=BRANCH_CHOICES, blank=True)
+    year = models.CharField(max_length=2, choices=YEAR_CHOICES, blank=True)
+    points = models.IntegerField(default=0)
+    is_published = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        # ترتيب افتراضي تنازلي بالنقاط ثم الاسم
+        ordering = ["committee", "-points", "name"]
+
+    def __str__(self):
+        return f"{self.get_committee_display()} — {self.name} ({self.points})"

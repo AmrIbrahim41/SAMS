@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Section, Video, CommitteeMember, Supervisor, SeminarItem
+from .models import Section, Video, CommitteeMember, Supervisor, SeminarItem, Participant
 
 
 class SectionSerializer(serializers.ModelSerializer):
@@ -32,5 +32,16 @@ class SupervisorSerializer(serializers.ModelSerializer):
 class SeminarItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = SeminarItem
+        fields = "__all__"
+        read_only_fields = ["created_at"]
+
+
+class ParticipantSerializer(serializers.ModelSerializer):
+    branch_display = serializers.CharField(source="get_branch_display", read_only=True)
+    year_display = serializers.CharField(source="get_year_display", read_only=True)
+    committee_display = serializers.CharField(source="get_committee_display", read_only=True)
+
+    class Meta:
+        model = Participant
         fields = "__all__"
         read_only_fields = ["created_at"]

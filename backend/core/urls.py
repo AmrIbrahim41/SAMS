@@ -3,7 +3,7 @@ from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from .views import (
     SectionViewSet, VideoViewSet, CommitteeMemberViewSet,
-    SupervisorViewSet, SeminarItemViewSet,
+    SupervisorViewSet, SeminarItemViewSet, ParticipantViewSet,
 )
 
 router = DefaultRouter()
@@ -12,6 +12,7 @@ router.register(r"videos", VideoViewSet)
 router.register(r"committee-members", CommitteeMemberViewSet)
 router.register(r"supervisors", SupervisorViewSet)
 router.register(r"seminar", SeminarItemViewSet)
+router.register(r"participants", ParticipantViewSet)
 
 urlpatterns = [
     path("", include(router.urls)),

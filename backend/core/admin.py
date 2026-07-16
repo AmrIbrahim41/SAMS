@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Section, Video, CommitteeMember, Supervisor, SeminarItem
+from .models import Section, Video, CommitteeMember, Supervisor, SeminarItem, Participant
 
 
 @admin.register(Section)
@@ -36,3 +36,12 @@ class CommitteeMemberAdmin(admin.ModelAdmin):
     list_editable = ("order", "is_published")
     list_filter = ("committee", "role", "is_published")
     search_fields = ("name", "major", "branch")
+
+
+@admin.register(Participant)
+class ParticipantAdmin(admin.ModelAdmin):
+    list_display = ("name", "committee", "branch", "year", "points", "is_published")
+    list_editable = ("points", "is_published")
+    list_filter = ("committee", "branch", "year", "is_published")
+    search_fields = ("name",)
+    ordering = ("committee", "-points")

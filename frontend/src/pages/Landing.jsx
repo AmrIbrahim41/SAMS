@@ -5,6 +5,7 @@ import { COMMITTEES } from "../lib/committees.jsx";
 import CommitteeSections from "../components/CommitteeSections.jsx";
 import SupervisorsSection from "../components/SupervisorsSection.jsx";
 import SeminarSection from "../components/SeminarSection.jsx";
+import PointsDashboard from "../components/PointsDashboard.jsx";
 
 const QUOTES = [
   { t: 'النجاح ليس نهاية المطاف، والفشل ليس قاتلاً؛ ما يهمّ حقًا هو <span class="hl">الشجاعة على الاستمرار</span>.', a: "ونستون تشرشل" },
@@ -17,6 +18,7 @@ const QUOTES = [
 export default function Landing({ admin = false, onLogout }) {
   const [qi, setQi] = useState(0);
   const [fade, setFade] = useState(false);
+  const [showPoints, setShowPoints] = useState(false);
   const timer = useRef(null);
 
   function doLogout() { logout(); if (onLogout) onLogout(); }
@@ -64,9 +66,13 @@ export default function Landing({ admin = false, onLogout }) {
       {admin && (
         <div className="admin-bar">
           <span>وضع التعديل — لوحة تحكم SAMS · اضغط زر ＋ في أي لجنة للإضافة</span>
-          <button className="link-btn" onClick={doLogout}>تسجيل خروج</button>
+          <div className="row" style={{ gap: 14 }}>
+            <button className="btn ghost sm" onClick={() => setShowPoints(true)}>🏆 لوحة النقاط</button>
+            <button className="link-btn" onClick={doLogout}>تسجيل خروج</button>
+          </div>
         </div>
       )}
+      {admin && showPoints && <PointsDashboard onClose={() => setShowPoints(false)} />}
       <div className="bg"></div>
       <div className="grid-lines"></div>
       <div className="blob b1"></div><div className="blob b2"></div><div className="blob b3"></div>

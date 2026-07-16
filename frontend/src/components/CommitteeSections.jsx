@@ -58,6 +58,33 @@ function roleLabel(role) {
   return map[role] || role;
 }
 
+// ميدالية/رقم الترتيب
+function rankBadge(i) {
+  return ["🥇", "🥈", "🥉"][i] || i + 1;
+}
+
+// لوحة صدارة اللجنة — أعلى 5 نقاط (بيانات من /participants/top/)
+function Leaderboard({ rows, color }) {
+  if (!rows || rows.length === 0) return null;
+  return (
+    <div className="cd-block">
+      <h3 className="cd-sub">المتصدّرون</h3>
+      <ol className="lb" style={{ "--c": color }}>
+        {rows.map((p, i) => (
+          <li key={p.id} className={`lb-row rank-${i + 1}`}>
+            <span className="lb-rank">{rankBadge(i)}</span>
+            <span className="lb-name">{p.name}</span>
+            <span className="lb-meta">
+              {[p.year_display, p.branch_display].filter(Boolean).join(" • ")}
+            </span>
+            <span className="lb-pts">{p.points}<em>نقطة</em></span>
+          </li>
+        ))}
+      </ol>
+    </div>
+  );
+}
+
 // زر إضافة (أدمن)
 function AddBtn({ color, label, onClick }) {
   return (
@@ -69,6 +96,7 @@ function AddBtn({ color, label, onClick }) {
 
 export default function CommitteeSections({ admin = false }) {
   const [byCommittee, setByCommittee] = useState({});
+  const [top, setTop] = useState({}); // {committee_key: [top5]}
   const [editor, setEditor] = useState(null); // {committee, role, member}
 
   function load() {
@@ -79,6 +107,7 @@ export default function CommitteeSections({ admin = false }) {
       }
       setByCommittee(grouped);
     });
+    api.get("/participants/top/").then((r) => setTop(r.data)).catch(() => {});
   }
   useEffect(() => { load(); }, []);
 
@@ -93,7 +122,6 @@ export default function CommitteeSections({ admin = false }) {
       {COMMITTEES.map((c) => {
         const people = byCommittee[c.key] || [];
         const byRole = (role) => people.filter((p) => p.role === role);
-        const members = byRole("member");
         const organizers = byRole("organizer");
 
         return (
@@ -124,23 +152,8 @@ export default function CommitteeSections({ admin = false }) {
                 })}
               </div>
 
-              {/* الأعضاء */}
-              {(members.length > 0 || admin) && (
-                <div className="cd-block">
-                  <h3 className="cd-sub">الأعضاء</h3>
-                  <div className="pgrid">
-                    {members.map((m) => (
-                      <MiniCard key={m.id} member={m} color={c.color} admin={admin}
-                        onEdit={(mm) => setEditor({ committee: c.key, role: "member", member: mm })}
-                        onDelete={remove} />
-                    ))}
-                    {admin && (
-                      <AddBtn color={c.color} label="إضافة عضو"
-                        onClick={() => setEditor({ committee: c.key, role: "member", member: null })} />
-                    )}
-                  </div>
-                </div>
-              )}
+              {/* لوحة الصدارة — أعلى 5 نقاط (تُدار من داشبورد النقاط) */}
+              <Leaderboard rows={top[c.key]} color={c.color} />
 
               {/* المنظمون */}
               {(organizers.length > 0 || admin) && (
