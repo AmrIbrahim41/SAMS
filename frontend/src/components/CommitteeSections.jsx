@@ -71,14 +71,14 @@ function Leaderboard({ rows, color, committee }) {
       <h3 className="cd-sub">المتصدّرون</h3>
       <ol className="lb" style={{ "--c": color }}>
         {rows.map((p, i) => (
-          <li key={p.id} className={`lb-row rank-${i + 1}`}>
-            <span className="lb-rank">{rankBadge(i)}</span>
+          <li key={p.id} className={`lb-card rank-${i + 1}`}>
+            <span className="lb-medal">{rankBadge(i)}</span>
+            <span className="lb-pts">{p.points}<em>نقطة</em></span>
             <span className="lb-name">{p.name}</span>
             <span className="lb-meta">
               <span className="lb-cmt" style={{ color }}>{committee}</span>
               {[p.year_display, p.branch_display].filter(Boolean).join(" • ")}
             </span>
-            <span className="lb-pts">{p.points}<em>نقطة</em></span>
           </li>
         ))}
       </ol>
