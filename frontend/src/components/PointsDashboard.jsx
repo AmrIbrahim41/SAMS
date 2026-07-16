@@ -24,7 +24,9 @@ export default function PointsDashboard({ onClose }) {
   const [filter, setFilter] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const [pointsModal, setPointsModal] = useState(null); // participant being awarded points
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
+  const editingRow = editId ? list.find((p) => p.id === editId) : null;
 
   const load = () => api.get("/participants/").then((r) => setList(r.data)).catch(() => {});
   useEffect(() => { load(); }, []);
@@ -131,9 +133,15 @@ export default function PointsDashboard({ onClose }) {
             <div className="field" style={{ maxWidth: 120 }}><label>النقاط</label>
               <input type="number" value={form.points} onChange={(e) => set("points", e.target.value)} /></div>
           </div>
-          <div className="row">
+          <div className="row pd-form-actions">
             <button className="btn" disabled={busy}>{busy ? "جارٍ الحفظ…" : editId ? "حفظ التعديل" : "إضافة"}</button>
             {editId && <button type="button" className="btn ghost" onClick={cancelEdit}>إلغاء</button>}
+            {editId && editingRow && (
+              <button type="button" className={`btn ghost pd-toggle ${editingRow.is_published ? "warn" : "ok"}`}
+                onClick={() => togglePublish(editingRow)}>
+                {editingRow.is_published ? "إخفاء" : "إظهار"}
+              </button>
+            )}
           </div>
           {error && <div className="error">{error}</div>}
         </form>
@@ -162,12 +170,12 @@ export default function PointsDashboard({ onClose }) {
                 <td><span className="cdot" style={{ background: cmt(p.committee).color }} />{cmt(p.committee).name}</td>
                 <td>{label(YEARS, p.year)}</td>
                 <td>{label(BRANCHES, p.branch)}</td>
-                <td><b>{p.points}</b></td>
-                <td><span className="tag">{p.is_published ? "ظاهر" : "مخفي"}</span></td>
-                <td className="row">
+                <td><b className="pts-pill">{p.points}</b></td>
+                <td><span className={`tag ${p.is_published ? "ok" : "no"}`}>{p.is_published ? "ظاهر" : "مخفي"}</span></td>
+                <td className="row pd-actions">
+                  <button className="link-btn add-pts" onClick={() => setPointsModal(p)}>＋ نقاط</button>
                   <button className="link-btn" onClick={() => edit(p)}>تعديل</button>
-                  <button className="link-btn" onClick={() => togglePublish(p)}>{p.is_published ? "إخفاء" : "إظهار"}</button>
-                  <button className="link-btn" onClick={() => remove(p)}>حذف</button>
+                  <button className="link-btn danger" onClick={() => remove(p)}>حذف</button>
                 </td>
               </tr>
             ))}
@@ -177,6 +185,67 @@ export default function PointsDashboard({ onClose }) {
             )}
           </tbody>
         </table>
+        </div>
+      </div>
+
+      {pointsModal && (
+        <AddPointsModal p={pointsModal}
+          onClose={() => setPointsModal(null)}
+          onDone={() => { setPointsModal(null); load(); }} />
+      )}
+    </div>
+  );
+}
+
+/* ---------- popup: منح نقاط (إضافة/خصم كدلتا) ---------- */
+function AddPointsModal({ p, onClose, onDone }) {
+  const [delta, setDelta] = useState("");
+  const [busy, setBusy] = useState(false);
+  const d = Number(delta) || 0;
+  const result = p.points + d;
+
+  useEffect(() => {
+    const onKey = (e) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
+  async function confirm() {
+    if (d === 0) return;
+    setBusy(true);
+    try { await api.patch(`/participants/${p.id}/`, { points: result }); onDone(); }
+    catch { setBusy(false); }
+  }
+
+  return (
+    <div className="ap-ov" onClick={onClose}>
+      <div className="ap-modal" onClick={(e) => e.stopPropagation()}>
+        <div className="ap-title">إضافة نقاط</div>
+        <div className="ap-name">{p.name}</div>
+
+        <div className="ap-current"><span>النقاط الحالية</span><b>{p.points}</b></div>
+
+        <div className="ap-quick">
+          {[1, 5, 10, -1, -5].map((n) => (
+            <button key={n} type="button" onClick={() => setDelta(String(d + n))}>
+              {n > 0 ? `+${n}` : n}
+            </button>
+          ))}
+        </div>
+
+        <input className="ap-input" type="number" value={delta} autoFocus
+          onChange={(e) => setDelta(e.target.value)} placeholder="اكتب رقم — موجب للإضافة، سالب للخصم" />
+
+        <div className="ap-result">
+          <span>النتيجة بعد التطبيق</span>
+          <b className={result < 0 ? "neg" : ""}>{result}</b>
+        </div>
+
+        <div className="row" style={{ justifyContent: "flex-end", gap: 10, marginTop: 6 }}>
+          <button className="btn ghost" onClick={onClose}>إلغاء</button>
+          <button className="btn" disabled={busy || d === 0} onClick={confirm}>
+            {busy ? "جارٍ…" : "تأكيد"}
+          </button>
         </div>
       </div>
     </div>

@@ -408,3 +408,52 @@ footer.foot .foot-links a:hover{color:#eaf2fb}
   .pd-count{flex:1 1 100%;margin:0;text-align:center}
 }
 @media(max-width:380px){.pd-grid{grid-template-columns:1fr}}
+
+/* status pills + points + row actions */
+.pd-table .tag{font-weight:700;font-size:12px;padding:4px 12px;border:1px solid transparent}
+.pd-table .tag.ok{color:#5ff0b0;background:color-mix(in srgb,#25d98a 16%,transparent);
+  border-color:color-mix(in srgb,#25d98a 45%,transparent)}
+.pd-table .tag.no{color:#ff8fa3;background:color-mix(in srgb,#ff3b5c 15%,transparent);
+  border-color:color-mix(in srgb,#ff3b5c 45%,transparent)}
+.pts-pill{display:inline-block;min-width:34px;text-align:center;padding:3px 10px;border-radius:9px;
+  font-weight:800;color:#ffd15c;background:color-mix(in srgb,#ffd15c 12%,transparent)}
+.pd-actions{gap:14px;justify-content:flex-start}
+.pd-actions .add-pts{color:#5ff0b0;font-weight:700}
+.pd-actions .danger{color:#ff8fa3}
+.pd-toggle.warn{color:#ffc06a;border-color:color-mix(in srgb,#ffc06a 45%,transparent)}
+.pd-toggle.ok{color:#5ff0b0;border-color:color-mix(in srgb,#25d98a 45%,transparent)}
+.pd-form-actions .pd-toggle{margin-inline-start:auto}
+
+/* nicer table cells */
+.pd-table td{color:#dce7f5}
+.pd-table td b{color:#eaf2fb}
+.pd-table tbody tr:not(:last-child) td{border-bottom:1px solid rgba(255,255,255,.055)}
+.pd-table td:first-child b{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:8px;
+  font-size:13px;background:rgba(255,255,255,.06)}
+.pd-table td:first-child b.top5{color:#0b1521;background:#ffd15c}
+
+/* ===== Add-points popup ===== */
+.ap-ov{position:fixed;inset:0;z-index:90;background:rgba(4,8,14,.72);backdrop-filter:blur(8px);
+  display:flex;align-items:center;justify-content:center;padding:20px;animation:pdFade .2s ease}
+.ap-modal{width:100%;max-width:360px;background:linear-gradient(180deg,#12233a,#0c1826);
+  border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:22px;
+  box-shadow:0 30px 80px rgba(0,0,0,.6);animation:pdRise .28s cubic-bezier(.2,.8,.2,1)}
+.ap-title{font-size:13px;font-weight:700;letter-spacing:.5px;color:#7fc0f0}
+.ap-name{font-size:20px;font-weight:800;color:#eaf2fb;margin:2px 0 16px}
+.ap-current,.ap-result{display:flex;align-items:center;justify-content:space-between;
+  padding:11px 14px;border-radius:12px;background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);font-size:14px;color:#bcd0e6}
+.ap-current b{font-size:18px;color:#eaf2fb}
+.ap-result{margin-top:12px;background:color-mix(in srgb,#4aa3ff 12%,rgba(255,255,255,.03))}
+.ap-result b{font-size:22px;color:#7fe0b0}
+.ap-result b.neg{color:#ff8fa3}
+.ap-quick{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 10px}
+.ap-quick button{flex:1;min-width:52px;padding:9px 0;border-radius:10px;font-family:inherit;font-weight:700;
+  font-size:14px;cursor:pointer;color:#dce7f5;background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.12);transition:.18s}
+.ap-quick button:hover{background:rgba(74,163,255,.22);border-color:rgba(74,163,255,.5)}
+.ap-input{width:100%;height:46px;text-align:center;font-size:16px;font-weight:700;
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:12px;
+  color:#eaf2fb;font-family:inherit;transition:.2s}
+.ap-input:focus{outline:none;border-color:var(--blue,#4aa3ff);
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--blue,#4aa3ff) 22%,transparent)}
