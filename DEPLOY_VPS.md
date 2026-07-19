@@ -4,14 +4,19 @@
 (IP `187.77.111.27`) جنب سيستم الجيم، بس **معزول تمامًا**: مستخدم لينكس خاص،
 قاعدة بيانات منفصلة، خدمة gunicorn منفصلة، وسابدومين مستقل.
 
-> يوم ما تخلص المشروع → روح لقسم **«التنظيف»** في آخر الملف. الجيم مايتأثرش نهائيًا.
+> المستخدم `azr` هيتعمل مرة واحدة وممكن يستضيف مشاريع كتير بعدين (كل مشروع بقاعدته
+> وخدمته المستقلة). فالعزل هنا **لكل مشروع** — قاعدة `sams_db` وخدمة `sams-gunicorn`
+> خاصين بـ SAMS بس.
+
+> يوم ما تخلص المشروع → روح لقسم **«التنظيف»** في آخر الملف. الجيم مايتأثرش نهائيًا،
+> والمستخدم `azr` بيفضل موجود لباقي مشاريعك.
 
 الإعدادات المستخدمة في الدليل (بدّلها لو حبيت):
 
 | العنصر | القيمة |
 |---|---|
-| مستخدم لينكس | `sams` |
-| مجلد الكود | `/home/sams/SAMS` |
+| مستخدم لينكس | `azr` (يُعاد استخدامه لمشاريع تانية) |
+| مجلد الكود | `/home/azr/SAMS` |
 | قاعدة البيانات | `sams_db` |
 | مستخدم DB | `sams_user` |
 | خدمة gunicorn | `sams-gunicorn` على `127.0.0.1:8001` |
@@ -46,17 +51,17 @@ git push
 ## المرحلة 2 — مستخدم لينكس ورفع الكود
 
 افتح **Terminal** بتاع Hostinger (بيدخل كـ **root**). كل الأوامر الجاية كـ root
-إلا لما أقول `sudo -u sams`.
+إلا لما أقول `sudo -u azr`.
 
 ```bash
-# 1) أنشئ مستخدم sams
-adduser --disabled-password --gecos "" sams
+# 1) أنشئ مستخدم azr (هتعيد استخدامه لمشاريع تانية)
+adduser --disabled-password --gecos "" azr
 
 # 2) اسمح لـ nginx (www-data) يدخل home المستخدم لاحقًا (للـ static/media)
-chmod 755 /home/sams
+chmod 755 /home/azr
 
 # 3) اعمل clone للريبو باسم المستخدم sams
-sudo -u sams git clone https://github.com/AmrIbrahim41/SAMS.git /home/sams/SAMS
+sudo -u azr git clone https://github.com/AmrIbrahim41/SAMS.git /home/azr/SAMS
 ```
 
 > لو الريبو Private هيطلب Personal Access Token عند الـ clone.
@@ -88,7 +93,7 @@ SQL
 
 ```bash
 # كل ده باسم المستخدم sams
-sudo -u sams bash
+sudo -u azr bash
 cd ~/SAMS/backend
 
 python3 -m venv venv
@@ -147,11 +152,11 @@ Description=SAMS gunicorn
 After=network.target postgresql.service
 
 [Service]
-User=sams
-Group=sams
-WorkingDirectory=/home/sams/SAMS/backend
+User=azr
+Group=azr
+WorkingDirectory=/home/azr/SAMS/backend
 Environment=DJANGO_SETTINGS_MODULE=config.settings
-ExecStart=/home/sams/SAMS/backend/venv/bin/gunicorn \
+ExecStart=/home/azr/SAMS/backend/venv/bin/gunicorn \
     --workers 3 \
     --bind 127.0.0.1:8001 \
     config.wsgi:application
@@ -184,10 +189,10 @@ server {
     client_max_body_size 100M;   # رفع صور/فيديوهات
 
     location /static/ {
-        alias /home/sams/SAMS/backend/staticfiles/;
+        alias /home/azr/SAMS/backend/staticfiles/;
     }
     location /media/ {
-        alias /home/sams/SAMS/backend/media/;
+        alias /home/azr/SAMS/backend/media/;
     }
     location / {
         proxy_pass http://127.0.0.1:8001;
@@ -233,7 +238,7 @@ curl -I https://sams-api.duckdns.org/api/   # المفروض يرد
 3. اقفل الحلقة (CORS): على السيرفر عدّل `CORS_ORIGINS` في `.env` برابط Vercel
    الحقيقي، وأعد التشغيل:
    ```bash
-   sudo -u sams nano /home/sams/SAMS/backend/.env   # ظبط CORS_ORIGINS
+   sudo -u azr nano /home/azr/SAMS/backend/.env   # ظبط CORS_ORIGINS
    systemctl restart sams-gunicorn
    ```
 
@@ -242,7 +247,7 @@ curl -I https://sams-api.duckdns.org/api/   # المفروض يرد
 ## تحديث الكود بعدين (بعد أي git push)
 
 ```bash
-sudo -u sams bash
+sudo -u azr bash
 cd ~/SAMS
 git pull
 source backend/venv/bin/activate
@@ -274,15 +279,16 @@ rm -f /etc/nginx/sites-enabled/sams /etc/nginx/sites-available/sams
 certbot delete --cert-name sams-api.duckdns.org
 systemctl reload nginx
 
-# 4) امسح المستخدم وكل ملفاته
-deluser --remove-home sams
+# 4) امسح مجلد المشروع فقط (المستخدم azr بيفضل موجود لمشاريعك التانية)
+rm -rf /home/azr/SAMS
 ```
 كمان امسح دومين `sams-api` من duckdns.org، واحذف المشروع من Vercel لو حبيت.
-**سيستم الجيم (tfg / tfg_sys_db / tfg-gunicorn / azr-tfg.duckdns.org) مايتأثرش بأي خطوة.**
+**سيستم الجيم (tfg / tfg_sys_db / tfg-gunicorn / azr-tfg.duckdns.org) مايتأثرش بأي خطوة،
+والمستخدم `azr` سليم لباقي مشاريعك.**
 
 ---
 
 ## ملاحظات
 - الجيم على البورت 8000 وقاعدة `tfg_sys_db`؛ SAMS على 8001 وقاعدة `sams_db` — **صفر تعارض**.
 - `db.sqlite3` و`media/` و`.env` **مش** بيترفعوا على GitHub (متظبطين في `.gitignore`) — على السيرفر بتبدأ بقاعدة نضيفة.
-- لو صفحة أدمن Django مطلعتش static بعد HTTPS، اتأكد إن `/home/sams` صلاحيته `755` وإن `collectstatic` اتعمل.
+- لو صفحة أدمن Django مطلعتش static بعد HTTPS، اتأكد إن `/home/azr` صلاحيته `755` وإن `collectstatic` اتعمل.
