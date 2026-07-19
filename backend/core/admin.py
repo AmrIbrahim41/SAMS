@@ -1,5 +1,17 @@
 from django.contrib import admin
-from .models import Section, Video, CommitteeMember, Supervisor, SeminarItem, Participant
+from .models import Section, Video, CommitteeMember, Supervisor, SeminarItem, Participant, SocialLinks
+
+
+@admin.register(SocialLinks)
+class SocialLinksAdmin(admin.ModelAdmin):
+    list_display = ("__str__", "updated_at")
+
+    def has_add_permission(self, request):
+        # صفّ واحد فقط
+        return not SocialLinks.objects.exists()
+
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 
 @admin.register(Section)

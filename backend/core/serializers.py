@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Section, Video, CommitteeMember, Supervisor, SeminarItem, Participant
+from .models import Section, Video, CommitteeMember, Supervisor, SeminarItem, Participant, SocialLinks
 
 
 class SectionSerializer(serializers.ModelSerializer):
@@ -34,6 +34,13 @@ class SeminarItemSerializer(serializers.ModelSerializer):
         model = SeminarItem
         fields = "__all__"
         read_only_fields = ["created_at"]
+
+
+class SocialLinksSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SocialLinks
+        fields = ["facebook", "instagram", "tiktok", "linkedin", "updated_at"]
+        read_only_fields = ["updated_at"]
 
 
 class ParticipantSerializer(serializers.ModelSerializer):

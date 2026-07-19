@@ -114,3 +114,10 @@ SIMPLE_JWT = {
 
 CORS_ALLOWED_ORIGINS = os.getenv("CORS_ORIGINS", "http://localhost:5173").split(",")
 CSRF_TRUSTED_ORIGINS = [o for o in CORS_ALLOWED_ORIGINS if o.startswith("http")]
+
+# خلف بروكسي nginx مع TLS: خلّي Django يعرف إن الطلب أصله HTTPS، وأمّن الكوكيز
+# في الإنتاج فقط (محليًا DEBUG=True فيفضلوا زي ما هم عشان الـ dev server).
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+if not DEBUG:
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True

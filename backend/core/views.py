@@ -2,11 +2,32 @@ from rest_framework import viewsets, filters
 from rest_framework.permissions import IsAdminUser, AllowAny
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from .models import Section, Video, CommitteeMember, Supervisor, SeminarItem, Participant
+from rest_framework.views import APIView
+from .models import Section, Video, CommitteeMember, Supervisor, SeminarItem, Participant, SocialLinks
 from .serializers import (
     SectionSerializer, VideoSerializer, CommitteeMemberSerializer,
     SupervisorSerializer, SeminarItemSerializer, ParticipantSerializer,
+    SocialLinksSerializer,
 )
+
+
+class SocialLinksView(APIView):
+    """روابط السوشيال ميديا (Singleton): الزوار يقرأون، الأدمن فقط يعدّل الروابط."""
+
+    def get_permissions(self):
+        if self.request.method == "GET":
+            return [AllowAny()]
+        return [IsAdminUser()]
+
+    def get(self, request):
+        return Response(SocialLinksSerializer(SocialLinks.load()).data)
+
+    def patch(self, request):
+        obj = SocialLinks.load()
+        ser = SocialLinksSerializer(obj, data=request.data, partial=True)
+        ser.is_valid(raise_exception=True)
+        ser.save()
+        return Response(ser.data)
 
 
 class SectionViewSet(viewsets.ModelViewSet):

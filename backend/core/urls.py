@@ -4,6 +4,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from .views import (
     SectionViewSet, VideoViewSet, CommitteeMemberViewSet,
     SupervisorViewSet, SeminarItemViewSet, ParticipantViewSet,
+    SocialLinksView,
 )
 
 router = DefaultRouter()
@@ -16,6 +17,7 @@ router.register(r"participants", ParticipantViewSet)
 
 urlpatterns = [
     path("", include(router.urls)),
+    path("social-links/", SocialLinksView.as_view(), name="social-links"),
     path("auth/login/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("auth/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
 ]

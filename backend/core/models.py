@@ -79,6 +79,32 @@ class Supervisor(models.Model):
         return self.name
 
 
+class SocialLinks(models.Model):
+    """روابط السوشيال ميديا — صف واحد فقط (Singleton). الأدمن يعدّل الروابط فقط، لا يضيف/يحذف."""
+    facebook = models.URLField(max_length=400, blank=True, default="")
+    instagram = models.URLField(max_length=400, blank=True, default="")
+    tiktok = models.URLField(max_length=400, blank=True, default="")
+    linkedin = models.URLField(max_length=400, blank=True, default="")
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "روابط السوشيال ميديا"
+        verbose_name_plural = "روابط السوشيال ميديا"
+
+    def save(self, *args, **kwargs):
+        # صفّ واحد دائمًا (pk=1)
+        self.pk = 1
+        super().save(*args, **kwargs)
+
+    @classmethod
+    def load(cls):
+        obj, _ = cls.objects.get_or_create(pk=1)
+        return obj
+
+    def __str__(self):
+        return "روابط السوشيال ميديا"
+
+
 class CommitteeMember(models.Model):
     """عضو داخل إحدى لجان فريق العمل. اللجان ثابتة في الكود، والأشخاص يُضافون من الأدمن."""
 
