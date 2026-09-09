@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Landing from "./pages/Landing.jsx";
 import Videos from "./pages/Videos.jsx";
 import Admin from "./pages/Admin.jsx";
+import { Analytics } from "@vercel/analytics/react";
 import "./styles.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
@@ -15,6 +16,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         {/* بوابة الداش بورد — تسجيل دخول ثم لوحة التحكم */}
         <Route path="/admin" element={<Admin />} />
       </Routes>
+      <Analytics />
     </BrowserRouter>
   </React.StrictMode>
 );
