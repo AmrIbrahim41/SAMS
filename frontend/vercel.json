@@ -1,5 +1,7 @@
 {
   "rewrites": [
-    { "source": "/((?!_vercel/).*)", "destination": "/index.html" }
+    { "source": "/api/(.*)", "destination": "https://sams-api.duckdns.org/api/$1" },
+    { "source": "/media/(.*)", "destination": "https://sams-api.duckdns.org/media/$1" },
+    { "source": "/((?!_vercel/|api/|media/).*)", "destination": "/index.html" }
   ]
 }

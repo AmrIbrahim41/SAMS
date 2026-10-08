@@ -11,6 +11,22 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+// الباك إند بيرجّع روابط ميديا كاملة على دومينه؛ نحولها لروابط نسبية
+// عشان تعدّي من الـ proxy بتاع Vercel (بعض مزودي الإنترنت بيحجبوا duckdns)
+const MEDIA_RE = /^https?:\/\/[^/]+(\/media\/.*)$/;
+function relativizeMedia(v) {
+  if (typeof v === "string") return v.replace(MEDIA_RE, "$1");
+  if (Array.isArray(v)) return v.map(relativizeMedia);
+  if (v && typeof v === "object") {
+    for (const k of Object.keys(v)) v[k] = relativizeMedia(v[k]);
+  }
+  return v;
+}
+api.interceptors.response.use((res) => {
+  res.data = relativizeMedia(res.data);
+  return res;
+});
+
 // تجديد التوكن تلقائيًا عند انتهائه (401) ثم إعادة الطلب
 let refreshing = null;
 api.interceptors.response.use(
