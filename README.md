@@ -43,7 +43,7 @@ source venv/bin/activate
 pip install -r requirements.txt
 copy .env.example .env          # ويندوز (أو cp على لينكس)
 python manage.py migrate
-python manage.py seed_admin        # ينشئ الأدمن من .env (admin / SamsAdmin#2026)
+python manage.py seed_admin        # ينشئ الأدمن من قيم ADMIN_* في .env
 python manage.py runserver
 ```
 
@@ -73,7 +73,7 @@ npm run dev
 
 ## 3) إزاي تضيف محتوى
 
-افتح `/admin` وسجّل دخول (admin / SamsAdmin#2026 — غيّرها):
+افتح `/admin` وسجّل دخول ببيانات الأدمن اللي حددتها في `.env`:
 - **تبويب الفيديوهات**: ارفع ملف فيديو + عنوان + وصف + صورة مصغّرة اختيارية.
 - **تبويب المحتوى**: أضف أقسام مرنة. لكل قسم: معرّف، عنوان، نص، إيموجي/أيقونة، وزر برابط اختياري. القسم بمعرّف `hero` بيظهر في عنوان الصفحة الرئيسية؛ الباقي بيظهر ككروت تحتها. تقدر تعدّل، تنشر/تخفي، وتحذف أي قسم.
 

@@ -1,5 +1,5 @@
 import os
-from django.core.management.base import BaseCommand
+from django.core.management.base import BaseCommand, CommandError
 from django.contrib.auth.models import User
 
 
@@ -9,7 +9,9 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         username = os.getenv("ADMIN_USERNAME", "admin")
         email = os.getenv("ADMIN_EMAIL", "admin@sams.local")
-        password = os.getenv("ADMIN_PASSWORD", "SamsAdmin#2026")
+        password = os.getenv("ADMIN_PASSWORD")
+        if not password:
+            raise CommandError("ADMIN_PASSWORD مش متحدد في .env")
 
         user, created = User.objects.get_or_create(username=username)
         user.email = email
